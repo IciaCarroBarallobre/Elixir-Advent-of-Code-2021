@@ -1,0 +1,63 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# Advent Of Code 2021 🎄🤶🏽
+
+## Introduction
+
+```shell
+.      *    *           *.       *   .                      *     .
+               .   .                   __   *    .     * .     *
+    *       *         *   .     .    _|__|_        *    __   .       *
+  .  *  /\       /\          *        ('')    *       _|__|_     .
+       /  \   * /  \  *          .  <( . )> *  .       ('')   *   *
+  *    /  \     /  \   .   *       _(__.__)_  _   ,--<(  . )>  .    .
+      /    \   /    \          *   |       |  )),`   (   .  )     *
+   *   `||` ..  `||`   . *.   ... ==========='`   ... '--`-` ... * jb .
+
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+([Christmas ASCII Draw](https://ascii.co.uk/))
+
+<!-- livebook:{"break_markdown":true} -->
+
+You're minding your own business on a ship at sea when the overboard alarm goes off! You rush to see if you can help. Apparently, one of the Elves tripped and accidentally sent the sleigh keys flying into the ocean! 🧝🤶🏽
+
+```shell
+                __/___            
+          _____/______|           
+  _______/_____\_______\_____     
+  \              < < <       |    
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+```
+
+Before you know it, you're inside a submarine the Elves keep ready for situations like this. It's covered in Christmas lights (because of course it is), and it even has an experimental antenna that should be able to track the keys if you can boost its signal strength high enough; there's a little meter that indicates the antenna's signal strength by **displaying 0-50 stars**.
+
+```shell
+
+                                                __/___            
+                                          _____/______|           
+                                  _______/_____\_______\_____     
+                                  \              < < <       |    
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+              ___
+             /   |  
+   ,--------'    '--------..._,.
+  (                          _--+    
+   `----------------------''' `'
+```
+
+Your instincts tell you that in order to save Christmas, **you'll need to get all fifty stars by December 1th of 2022**.
+
+**Collect stars by solving puzzles**. Two puzzles will be made available on each day in the Advent calendar; the second puzzle is unlocked when you complete the first. Each puzzle grants one star. Good luck!
+
+## Days Index
+
+### Week 1
+
+* [Day 1](./Puzzles/Day1/Day1.livemd)
+
+...
