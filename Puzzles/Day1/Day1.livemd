@@ -2,9 +2,37 @@
 
 # Advent Of Code 21 - Day 1
 
+## Day 1
+
+In one day, you can get 2 stars by  solving 2 puzzle.
+
+Index
+
+* [Puzzle 1](#day-1:-sonar-sweep-(puzzle-1/2))
+* [Puzzle 2](#day-1:-sonar-sweep-(puzzle-2/2))
+
 ## Day 1: Sonar Sweep (Puzzle 1/2)
 
 As the submarine drops below the surface of the ocean, it automatically performs a sonar sweep of the nearby sea floor. On a small screen, the sonar sweep report (your puzzle input) appears: each line is a measurement of the sea floor depth as the sweep looks further and further away from the submarine.
+
+```
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+              ___
+             /   |  
+   ,--------'    '--------..._,.
+  (                          _--+    
+   `----------------------''' `'
+                     |_3m_|
+                        \
+                         \  
+                          \
+                           \ 
+                            \  
+                          ---X..--
+                   -----/         \ ------
+           ---X..--
+    -----/         
+```
 
 For example, suppose you had the following report:
 
@@ -25,7 +53,7 @@ This report indicates that, scanning outward from the submarine, the sonar sweep
 
 The first order of business is to figure out how quickly the depth increases, just so you know what you're dealing with - you never know if the keys will get carried into deeper water by an ocean current or a fish or something.
 
-To do this, count the number of times a depth measurement increases from the previous measurement. (There is no measurement before the first measurement.) In the example above, the changes are as follows:
+To do this, **count the number of times a depth measurement increases from the previous measurement**. (There is no measurement before the first measurement.) In the example above, the changes are as follows:
 
 ```
 199 (N/A - no previous measurement)
@@ -44,27 +72,98 @@ In this example, there are **7 measurements** that are larger than the previous 
 
 How many measurements are larger than the previous measurement?
 
+<!-- livebook:{"break_markdown":true} -->
+
+* Step 1: Read the file and split it by linebreaks (\n) ignoring white spaces
+
 ```elixir
-# Step 1: Read the file and transform to list 
-# Step 2: Apply a fun that reduce the list counting the increases
+
+measuremnts =
+  File.read!("<Insert file path>")
+  |> String.split("\n", trim: true)
+  |> Enum.map(&String.to_integer/1)
 ```
 
 <!-- livebook:{"output":true} -->
 
 ```
-nil
+[140, 154, 165, 150, 151, 161, 172, 174, 166, 168, 176, 191, 192, 189, 190, 191, 202, 203, 206, 207,
+ 167, 179, 204, 206, 208, 209, 216, 198, 200, 207, 217, 218, 223, 227, 228, 243, 241, 246, 278, 255,
+ 256, 273, 295, 291, 288, 290, 303, 325, 301, 292, ...]
+```
+
+* Step 2: Create a fun that returns if one number is higher than another, and tests it
+
+```elixir
+increase? = fn current_value, previous_value -> previous_value < current_value end
+
+IO.inspect(increase?.(33, 33), label: "No, same value")
+IO.inspect(increase?.(33, 11), label: "Yes, increase")
+IO.inspect(increase?.(11, 33), label: "No, decrease")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+No, same value: false
+Yes, increase: true
+No, decrease: false
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+false
+```
+
+* Step 3: Create a fun to count increases iterating over a list and accumulating the result
+
+```elixir
+counting_increases = fn current_value, {previous_value, acc} ->
+  if increase?.(current_value, previous_value) do
+    {current_value, acc + 1}
+  else
+    {current_value, acc}
+  end
+end
+
+IO.inspect(counting_increases.(33, {33, 0}), label: "No increase, same valuee. Acc: 0 to 0")
+IO.inspect(counting_increases.(33, {11, 6}), label: "Yes, increase. Acc: 6 to 7")
+IO.inspect(counting_increases.(11, {33, 6}), label: "No, decrease. Acc: 6 to 6 ")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+No increase, same valuee. Acc: 0 to 0: {33, 0}
+Yes, increase. Acc: 6 to 7: {33, 7}
+No, decrease. Acc: 6 to 6 : {11, 6}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{11, 6}
+```
+
+* Step 4: Use [`Enum.reduce(enumerable, acc, fun)`](https://hexdocs.pm/elixir/1.12/Enum.html#reduce/3) fun which and returns total acumulated result
+
+```elixir
+[first_no_comparable_value | rest_of_measuremnts] = measuremnts
+
+Enum.reduce(rest_of_measuremnts, {first_no_comparable_value, 0}, counting_increases)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{3596, 1298}
 ```
 
 ## Day 1: Sonar Sweep (Puzzle 2/2)
 
-```elixir
-# TO-DO
-```
+TO-DO
 
-<!-- livebook:{"output":true} -->
-
-```
-nil
-```
+<!-- livebook:{"break_markdown":true} -->
 
 [Return to puzzle index](../../AdventOfCode.livemd)
