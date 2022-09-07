@@ -1,10 +1,16 @@
-# Elixir-Advent-of-Code
+# Elixir-Advent-of-Code 🤶
 
-Hey! Will try to solve advent of code (AOC) using Elixir &amp; Livebook. Advent of Code (AOC) is an Advent calendar of **small programming puzzles** for a variety of skill sets and skill levels that can be solved in any programming language you like.
+Hey! Will try to solve advent of code (AOC) using Elixir 💧 &amp; Livebook 📚. 
 
-## Project Installation
+📅 Advent of Code (AOC) is an Advent calendar of **small programming puzzles** for a variety of skill sets and skill levels that can be solved in any programming language you like.
 
-If you want to use Livebook: 
+**Index**
+* [Project Installation](#project-installation)
+* [Project Structure](#project-structure)
+
+## Project Installation 
+
+📚 If you want to use Livebook: 
 
 * Step 1: Install and configure Git with GitHub: ([What is Git and GitHub?](#what-is-git-and-github))
 * Step 2: Install Elixir: ([What is Elixir?](#what-is-elixir)).
@@ -19,7 +25,7 @@ git clone https://github.com/IciaCarroBarallobre/Elixir-Advent-of-Code.git
 
 * Step 6: Initiallizate Livebook and search the file: AdventOfCode.livemd
   
-Although we are going to use Livebook, we are going to share the solution in a elixir file too.
+💧 Although we are going to use Livebook, we are going to share the solution in a elixir file too.
 
 ## Project Structure
 
