@@ -59,5 +59,6 @@ Your instincts tell you that in order to save Christmas, **you'll need to get al
 ### Week 1
 
 * [Day 1](./Puzzles/Day1/Day1.livemd)
+* [Day 2](./Puzzles/Day2/Day2.livemd)
 
 ...

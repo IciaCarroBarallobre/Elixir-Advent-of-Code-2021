@@ -8,10 +8,10 @@ In one day, you can get 2 stars by  solving 2 puzzle.
 
 Index
 
-* [Puzzle 1](#day-1:-sonar-sweep-(puzzle-1/2))
-* [Puzzle 2](#day-1:-sonar-sweep-(puzzle-2/2))
+* [Puzzle 1](#sonar-sweep-(puzzle-1/2))
+* [Puzzle 2](#sonar-sweep-(puzzle-2/2))
 
-## Day 1: Sonar Sweep (Puzzle 1/2)
+## Sonar Sweep (Puzzle 1/2)
 
 As the submarine drops below the surface of the ocean, it automatically performs a sonar sweep of the nearby sea floor. On a small screen, the sonar sweep report (your puzzle input) appears: each line is a measurement of the sea floor depth as the sweep looks further and further away from the submarine.
 
@@ -77,9 +77,8 @@ How many measurements are larger than the previous measurement?
 * Step 1: Read the file and split it by linebreaks (\n) ignoring white spaces
 
 ```elixir
-
 measuremnts =
-  File.read!("<Insert file path>")
+  File.read!("./Projects/Elixir-Advent-of-Code/Puzzles/Day1/input.txt")
   |> String.split("\n", trim: true)
   |> Enum.map(&String.to_integer/1)
 ```
@@ -160,10 +159,128 @@ Enum.reduce(rest_of_measuremnts, {first_no_comparable_value, 0}, counting_increa
 {3596, 1298}
 ```
 
-## Day 1: Sonar Sweep (Puzzle 2/2)
+## Sonar Sweep (Puzzle 2/2)
 
-TO-DO
+Considering every single measurement isn't as useful as you expected: there's just too much noise in the data.
+
+Instead, **consider sums of a three-measurement sliding window**. Again considering the above example:
+
+```
+199  A      
+200  A B    
+208  A B C  
+210    B C D
+200  E   C D
+207  E F   D
+240  E F G  
+269    F G H
+260      G H
+263        H
+```
 
 <!-- livebook:{"break_markdown":true} -->
 
-[Return to puzzle index](../../AdventOfCode.livemd)
+**Start by comparing the first and second three-measurement windows**. First **window A** contains `(199, 200, 208)`; their sum is `199 + 200 + 208 = 607` and, second **window B** `(200, 208, 210)`; its sum is `618`. `Sum(A) < Sum(B)` so the second window is larger than the sum of the first, so this first comparison **increased**.
+
+Your goal now is to **count the number of times the sum of measurements in this sliding window increases from the previous sum**. So, compare A with B, then compare B with C, then C with D, and so on. Stop when there aren't enough measurements left to create a new three-measurement sum.
+
+In the above example, the sum of each three-measurement window is as follows:
+
+```
+A: 607 (N/A - no previous sum)
+B: 618 (increased)
+C: 618 (no change)
+D: 617 (decreased)
+E: 647 (increased)
+F: 716 (increased)
+G: 769 (increased)
+H: 792 (increased)
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+In this example, there are 5 sums that are larger than the previous sum.
+
+Consider sums of a three-measurement sliding window. **How many sums are larger than the previous sum?**
+
+<!-- livebook:{"break_markdown":true} -->
+
+* Step 1: Read the file and split it by linebreaks (\n) ignoring white spaces
+
+```elixir
+measuremnts =
+  File.read!("./Projects/Elixir-Advent-of-Code/Puzzles/Day1/input.txt")
+  |> String.split("\n", trim: true)
+  |> Enum.map(&String.to_integer/1)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[140, 154, 165, 150, 151, 161, 172, 174, 166, 168, 176, 191, 192, 189, 190, 191, 202, 203, 206, 207,
+ 167, 179, 204, 206, 208, 209, 216, 198, 200, 207, 217, 218, 223, 227, 228, 243, 241, 246, 278, 255,
+ 256, 273, 295, 291, 288, 290, 303, 325, 301, 292, ...]
+```
+
+* Step 2: Evaluate the usefull number to make an increase or a decrease.
+
+```
+           X     X
+A   199 + 200 + 208
+B         200 + 208 + 210
+
+                 X     X
+B         200 + 208 + 210
+C               208 + 210 + 200
+
+```
+
+**Step 1 (B-A)**: `current = B[3] => A[4]` and `previous = A[1]` (You could ignore A2 A3 B2 B3 in this substraction)
+
+**Step 2 (C-B)**: `current = C[3] => A[5]` and `previous= B[1] => A[2]`
+
+...
+
+**Step N (N-M)**: `current = N[1] => ... => A[3N-1]` and `previous= M[1] => A[3N-4]`
+
+```elixir
+# Increase function is the same
+
+# Iterate over the list  checking the increasing of h4 and h1 and acummulating increased_count.
+defmodule WindowsIncrease do
+  def increase?(current_value, previous_value) do
+    previous_value < current_value
+  end
+
+  def increase_count_windows3(measuremnts) do
+    increase_count_windows3(measuremnts, 0)
+  end
+
+  def increase_count_windows3(measurement, increased_count) do
+    case measurement do
+      [h1, h2, h3, h4 | t] ->
+        increase_count_windows3(
+          [h2, h3, h4 | t],
+          if increase?(h4, h1) do
+            increased_count + 1
+          else
+            increased_count
+          end
+        )
+
+      _ ->
+        increased_count
+    end
+  end
+end
+
+WindowsIncrease.increase_count_windows3(measuremnts)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+1248
+```
+
+[Return to puzzles index](../../AdventOfCode.livemd)
