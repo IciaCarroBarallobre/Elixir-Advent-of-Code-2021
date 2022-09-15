@@ -78,7 +78,7 @@ How many measurements are larger than the previous measurement?
 
 ```elixir
 measuremnts =
-  File.read!("./Projects/Elixir-Advent-of-Code/Puzzles/Day1/input.txt")
+  File.read!("<insert your path>")
   |> String.split("\n", trim: true)
   |> Enum.map(&String.to_integer/1)
 ```
@@ -209,7 +209,7 @@ Consider sums of a three-measurement sliding window. **How many sums are larger 
 
 ```elixir
 measuremnts =
-  File.read!("./Projects/Elixir-Advent-of-Code/Puzzles/Day1/input.txt")
+  File.read!("<insert your path>")
   |> String.split("\n", trim: true)
   |> Enum.map(&String.to_integer/1)
 ```
