@@ -1,6 +1,6 @@
 <!-- livebook:{"persist_outputs":true} -->
 
-# Advent Of Code 21 - Day 1
+# Advent Of Code 21
 
 ## Day 1
 
@@ -10,6 +10,10 @@ Index
 
 * [Puzzle 1](#sonar-sweep-(puzzle-1/2))
 * [Puzzle 2](#sonar-sweep-(puzzle-2/2))
+
+```elixir
+puzzle_input_path = "<insert puzzle input path>"
+```
 
 ## Sonar Sweep (Puzzle 1/2)
 
@@ -78,7 +82,7 @@ How many measurements are larger than the previous measurement?
 
 ```elixir
 measuremnts =
-  File.read!("<insert your path>")
+  File.read!(puzzle_input_path)
   |> String.split("\n", trim: true)
   |> Enum.map(&String.to_integer/1)
 ```
@@ -209,7 +213,7 @@ Consider sums of a three-measurement sliding window. **How many sums are larger 
 
 ```elixir
 measuremnts =
-  File.read!("<insert your path>")
+  File.read!(puzzle_input_path)
   |> String.split("\n", trim: true)
   |> Enum.map(&String.to_integer/1)
 ```
@@ -283,4 +287,8 @@ WindowsIncrease.increase_count_windows3(measuremnts)
 1248
 ```
 
-[Return to puzzles index](../../AdventOfCode.livemd)
+| Previous | Next                         |
+| -------- | ---------------------------: |
+| -        | [Day 2](../Day2/Day2.livemd) |
+
+|[Return to puzzles index](../../AdventOfCode.livemd)

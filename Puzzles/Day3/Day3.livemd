@@ -1,0 +1,118 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# Advent Of Code 21
+
+## Day 3
+
+In one day, you can get 2 stars by  solving 2 puzzle.
+
+Index
+
+* [Puzzle 1](#binary-diagnostic-(puzzle-1/2))
+* [Puzzle 2](#binary-diagnostic-(puzzle-2/2))
+
+```elixir
+input_puzzle_path = "./Projects/Elixir-Advent-of-Code/Puzzles/Day3/input.txt"
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"./Projects/Elixir-Advent-of-Code/Puzzles/Day3/input.txt"
+```
+
+## Binary Diagnostic (Puzzle 1/2)
+
+The submarine has been making some odd creaking noises, so you ask it to produce a diagnostic report just in case.
+
+The diagnostic report (your puzzle input) consists of a **list of binary numbers** which, when **decoded properly, can tell you many useful things about the conditions of the submarine**.
+
+```
+          .-""""-.
+          |==  ==|-.
+          |~~ ~~~|`\\
+          |LILILI| ||    The first parameter** to check is the **power consumption.
+          |      |//
+          |      |/
+   jps    |      |
+        __|______|__
+       [____________]
+```
+
+You need to **use the binary numbers** in the diagnostic report **generate two new binary numbers** (called the **gamma rate** and the **epsilon rate**). The **power consumption** can then be found by **multiplying the gamma rate by the epsilon rate**.
+
+#### Gamma rate
+
+Each bit in the **gamma rate** can be determined by **finding the most common bit in the corresponding position** of all numbers in the diagnostic report.
+
+For example, given the following diagnostic report:
+
+```
+00100
+11110
+10110
+10111
+10101
+01111
+00111
+11100
+10000
+11001
+00010
+01010
+```
+
+Considering only the first bit of each number, there are `5 => 0 bits` and `seven => 1 bits`. So the most common bit is 1, and the **first bit of the gamma rate is 1**.
+
+The most **common second bit** of the numbers in the diagnostic report is **0**.
+
+The most common value of the third, fourth, and fifth bits are **1, 1, and 0**.
+
+So, the gamma rate is the binary number `10110`, or `22` in decimal.
+
+#### Epsilon rate
+
+The epsilon rate is calculated in a similar way; rather than use the most common bit, **the least common bit** from each position is used. So, the epsilon rate is `01001`, or `9` in decimal.
+
+<!-- livebook:{"break_markdown":true} -->
+
+#### Question ...
+
+**Multiplying the gamma rate (22) by the epsilon rate (9) produces the power consumption, 198**.
+
+Use the binary numbers in your diagnostic report to calculate the gamma rate and epsilon rate, then multiply them together. **What is the power consumption of the submarine?**
+
+```elixir
+# Read the file, in this case as list o list (instruction, value)
+measuremnts =
+  File.read!(input_puzzle_path)
+  |> String.split("\n", trim: true)
+
+# TODO: count max of lines an count ones by column   
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+["000010000011", "001010000111", "011010000010", "000011111110", "101101000101", "000100010100",
+ "111101111110", "111111000010", "000011010011", "100011100000", "101110110001", "111011111101",
+ "111011011001", "010101000010", "000010001000", "101010011111", "010000111101", "011010111100",
+ "101111010110", "000110110101", "001010000001", "110101100110", "111110010100", "001000001011",
+ "100111101001", "000010010001", "100100101010", "011010110111", "000001100100", "101111000111",
+ "010101101100", "001111010010", "010001011100", "110101011011", "000010101000", "011011101101",
+ "101001000011", "101111000000", "001111101111", "001101110111", "110110110101", "100011001011",
+ "010110110011", "001010001110", "110110100100", "001001111111", "100111011100", "101101001010",
+ "011110000011", "010101111000", ...]
+```
+
+## Binary Diagnostic(Puzzle 2/2)
+
+TO-DO
+
+<!-- livebook:{"break_markdown":true} -->
+
+| Previous                     | Next                         |
+| ---------------------------- | ---------------------------: |
+| [Day 2](../Day2/Day2.livemd) | [Day 4](../Day4/Day4.livemd) |
+
+|[Return to puzzles index](../../AdventOfCode.livemd)
