@@ -1,2 +1,5 @@
 tree.txt
 Puzzles/*/input.txt
+Puzzles/*/input_test.txt
+Puzzles/*/input_example.txt
+Puzzles/*/example.txt

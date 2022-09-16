@@ -12,26 +12,21 @@ Index
 * [Puzzle 2](#binary-diagnostic-(puzzle-2/2))
 
 ```elixir
-input_puzzle_path = "./Projects/Elixir-Advent-of-Code/Puzzles/Day3/input.txt"
+input_puzzle_path = "<insert path here>/input.txt"
 ```
 
-<!-- livebook:{"output":true} -->
-
-```
-"./Projects/Elixir-Advent-of-Code/Puzzles/Day3/input.txt"
-```
 
 ## Binary Diagnostic (Puzzle 1/2)
 
 The submarine has been making some odd creaking noises, so you ask it to produce a diagnostic report just in case.
 
-The diagnostic report (your puzzle input) consists of a **list of binary numbers** which, when **decoded properly, can tell you many useful things about the conditions of the submarine**.
+The diagnostic report (your puzzle input) consists of a **list of binary numbers** which, when **decoded properly, can tell you many useful things about the conditions of the submarine**. We need to check the **power consumption**.
 
 ```
           .-""""-.
           |==  ==|-.
           |~~ ~~~|`\\
-          |LILILI| ||    The first parameter** to check is the **power consumption.
+          |LILILI| ||    
           |      |//
           |      |/
    jps    |      |
@@ -62,7 +57,7 @@ For example, given the following diagnostic report:
 01010
 ```
 
-Considering only the first bit of each number, there are `5 => 0 bits` and `seven => 1 bits`. So the most common bit is 1, and the **first bit of the gamma rate is 1**.
+Considering only the first bit of each number, there are `5 => 0 bits` and `7 => 1 bits`. So the most common bit is 1, and the **first bit of the gamma rate is 1**.
 
 The most **common second bit** of the numbers in the diagnostic report is **0**.
 
@@ -78,36 +73,278 @@ The epsilon rate is calculated in a similar way; rather than use the most common
 
 #### Question ...
 
-**Multiplying the gamma rate (22) by the epsilon rate (9) produces the power consumption, 198**.
-
-Use the binary numbers in your diagnostic report to calculate the gamma rate and epsilon rate, then multiply them together. **What is the power consumption of the submarine?**
+Use the binary numbers in your diagnostic report to calculate the gamma rate and epsilon rate, convert to decimal system and then multiply them together. **What is the power consumption of the submarine?**
 
 ```elixir
-# Read the file, in this case as list o list (instruction, value)
-measuremnts =
+# Read the input file and split the bits
+diagnostic_report =
   File.read!(input_puzzle_path)
   |> String.split("\n", trim: true)
-
-# TODO: count max of lines an count ones by column   
+  |> Enum.map(fn x -> String.graphemes(x) end)
 ```
 
 <!-- livebook:{"output":true} -->
 
 ```
-["000010000011", "001010000111", "011010000010", "000011111110", "101101000101", "000100010100",
- "111101111110", "111111000010", "000011010011", "100011100000", "101110110001", "111011111101",
- "111011011001", "010101000010", "000010001000", "101010011111", "010000111101", "011010111100",
- "101111010110", "000110110101", "001010000001", "110101100110", "111110010100", "001000001011",
- "100111101001", "000010010001", "100100101010", "011010110111", "000001100100", "101111000111",
- "010101101100", "001111010010", "010001011100", "110101011011", "000010101000", "011011101101",
- "101001000011", "101111000000", "001111101111", "001101110111", "110110110101", "100011001011",
- "010110110011", "001010001110", "110110100100", "001001111111", "100111011100", "101101001010",
- "011110000011", "010101111000", ...]
+[
+  ["0", "0", "0", "0", "1", "0", "0", "0", "0", "0", "1", "1"],
+  ["0", "0", "1", "0", "1", "0", "0", "0", "0", "1", "1", "1"],
+  ["0", "1", "1", "0", "1", "0", "0", "0", "0", "0", "1", "0"],
+  ["0", "0", "0", "0", "1", "1", "1", "1", "1", "1", "1", "0"],
+  ["1", "0", "1", "1", "0", "1", "0", "0", "0", "1", "0", "1"],
+  ["0", "0", "0", "1", "0", "0", "0", "1", "0", "1", "0", "0"],
+  ["1", "1", "1", "1", "0", "1", "1", "1", "1", "1", "1", "0"],
+  ["1", "1", "1", "1", "1", "1", "0", "0", "0", "0", "1", "0"],
+  ["0", "0", "0", "0", "1", "1", "0", "1", "0", "0", "1", "1"],
+  ["1", "0", "0", "0", "1", "1", "1", "0", "0", "0", "0", "0"],
+  ["1", "0", "1", "1", "1", "0", "1", "1", "0", "0", "0", "1"],
+  ["1", "1", "1", "0", "1", "1", "1", "1", "1", "1", "0", "1"],
+  ["1", "1", "1", "0", "1", "1", "0", "1", "1", "0", "0", "1"],
+  ["0", "1", "0", "1", "0", "1", "0", "0", "0", "0", "1", "0"],
+  ["0", "0", "0", "0", "1", "0", "0", "0", "1", "0", "0", "0"],
+  ["1", "0", "1", "0", "1", "0", "0", "1", "1", "1", "1", "1"],
+  ["0", "1", "0", "0", "0", "0", "1", "1", "1", "1", "0", "1"],
+  ["0", "1", "1", "0", "1", "0", "1", "1", "1", "1", "0", "0"],
+  ["1", "0", "1", "1", "1", "1", "0", "1", "0", "1", "1", "0"],
+  ["0", "0", "0", "1", "1", "0", "1", "1", "0", "1", "0", "1"],
+  ["0", "0", "1", "0", "1", "0", "0", "0", "0", "0", "0", "1"],
+  ["1", "1", "0", "1", "0", "1", "1", "0", "0", "1", "1", "0"],
+  ["1", "1", "1", "1", "1", "0", "0", "1", "0", "1", "0", "0"],
+  ["0", "0", "1", "0", "0", "0", "0", "0", "1", "0", "1", "1"],
+  ["1", "0", "0", "1", "1", "1", "1", "0", "1", "0", "0", "1"],
+  ["0", "0", "0", "0", "1", "0", "0", "1", "0", "0", "0", "1"],
+  ["1", "0", "0", "1", "0", "0", "1", "0", "1", "0", "1", "0"],
+  ["0", "1", "1", "0", "1", "0", "1", "1", "0", "1", "1", "1"],
+  ["0", "0", "0", "0", "0", "1", "1", "0", "0", "1", "0", "0"],
+  ["1", "0", "1", "1", "1", "1", "0", "0", "0", "1", "1", "1"],
+  ["0", "1", "0", "1", "0", "1", "1", "0", "1", "1", "0", "0"],
+  ["0", "0", "1", "1", "1", "1", "0", "1", "0", "0", "1", "0"],
+  ["0", "1", "0", "0", "0", "1", "0", "1", "1", "1", "0", "0"],
+  ["1", "1", "0", "1", "0", "1", "0", "1", "1", "0", "1", "1"],
+  ["0", "0", "0", "0", "1", "0", "1", "0", "1", "0", "0", "0"],
+  ["0", "1", "1", "0", "1", "1", "1", "0", "1", "1", "0", "1"],
+  ["1", "0", "1", "0", "0", "1", "0", "0", "0", "0", "1", "1"],
+  ["1", "0", "1", "1", "1", "1", "0", "0", "0", "0", "0", "0"],
+  ["0", "0", "1", "1", "1", "1", "1", "0", "1", "1", "1", ...],
+  ["0", "0", "1", "1", "0", "1", "1", "1", "0", "1", ...],
+  ["1", "1", "0", "1", "1", "0", "1", "1", "0", ...],
+  ["1", "0", "0", "0", "1", "1", "0", "0", ...],
+  ["0", "1", "0", "1", "1", "0", "1", ...],
+  ["0", "0", "1", "0", "1", "0", ...],
+  ["1", "1", "0", "1", "1", ...],
+  ["0", "0", "1", "0", ...],
+  ["1", "0", "0", ...],
+  ["1", "0", ...],
+  ["0", ...],
+  [...],
+  ...
+]
 ```
 
-## Binary Diagnostic(Puzzle 2/2)
+```elixir
+defmodule BinaryDiagnostic do
+  def greater(%{"0" => zeros, "1" => ones}), do: if(zeros < ones, do: "1", else: "0")
+  def greater(%{"0" => _}), do: "0"
+  def greater(%{"1" => _}), do: "1"
 
-TO-DO
+  def most_common_bit(list) do
+    list
+    |> Enum.frequencies()
+    # |> IO.inspect() #debug line
+    |> greater()
+  end
+
+  # Calculate GAMMA RATE
+  def calculate_gamma_rate(diagnostic_report) do
+    # Transpose
+    list_of_columns = diagnostic_report |> Enum.zip() |> Enum.map(&Tuple.to_list(&1))
+    calculate_gamma_rate(list_of_columns, "")
+  end
+
+  def calculate_gamma_rate([h | t], acc) do
+    calculate_gamma_rate(t, acc <> most_common_bit(h))
+  end
+
+  def calculate_gamma_rate(_, acc) do
+    acc
+  end
+
+  # Calculate EPSILON RATE
+  def calculate_epsilon_rate(gamma_rate) do
+    list_of_graphemes =
+      Enum.map(
+        String.graphemes(gamma_rate),
+        fn x ->
+          case x do
+            "0" -> "1"
+            "1" -> "0"
+          end
+        end
+      )
+
+    Enum.join(list_of_graphemes)
+  end
+end
+
+gamma_rate =
+  BinaryDiagnostic.calculate_gamma_rate(diagnostic_report) |> IO.inspect(label: "Gamma rate")
+
+epsilon_rate =
+  BinaryDiagnostic.calculate_epsilon_rate(gamma_rate) |> IO.inspect(label: "Epsilon rate")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Gamma rate: "101111001110"
+Epsilon rate: "010000110001"
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"010000110001"
+```
+
+```elixir
+# To decimal system:
+{gamma_decimal_value, _} = Integer.parse(gamma_rate, 2)
+{epsilon_decimal_value, _} = Integer.parse(epsilon_rate, 2)
+
+{gamma_decimal_value, epsilon_decimal_value}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{3022, 1073}
+```
+
+```elixir
+epsilon_decimal_value * gamma_decimal_value
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+3242606
+```
+
+## Binary Diagnostic (Puzzle 2/2)
+
+Next, you should verify the **life support rating**, which can be determined by multiplying the **oxygen generator rating** by the **CO2** scrubber rating. Both ratings are values that can be found in your diagnostic report - finding them is the tricky part.
+
+```
+       ___
+       )_(             _
+       | |            [_ ]
+     .-'-'-.        .-'. '-.
+    /-::_..-\      /:;/ _.-'\
+    )_     _(      |:._   .-|
+    |;::    |      |:._     |
+    |;:: O2 |      |:._ CO2 |
+    |;::    |      |:._     |
+    |;::-.._|      |:._     |
+    `-.._..-'      `-.____.-'    cjr
+
+  --------------------------------------
+ /                                       \
+|               80  90  100               |
+|            70     ^      120            |        Jon McGorrill
+|        60 *      /|\       * 140        |
+|    55             |              160    |
+|                   |                     |
+|                   |                     |
+|   (O)            (+)              (O)   |
+ \______________________________________
+   
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+Both values are located using a similar process that involves **filtering out values until only one remains**. Consider just the first bit of those numbers:
+
+* **Keep only numbers selected by the bit criteria** for which you are searching.
+* **Discard numbers which do not match the bit criteria**.
+* If you **only have one number left**, **stop**; this is the rating value for which you are searching.
+* **Otherwise, repeat the process**, considering the next bit to the right.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Oxygen generator rating
+
+Determine the **most common value (0 or 1) in the current bit position**, and **keep only numbers with that bit in that position**. If 0 frequency = 1 frequency => Keep values with a 1 in the position being considered.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### CO2 scrubber rating
+
+Determine the **least common value (0 or 1)** in the current bit position, and **keep only numbers** with that bit in that position. If 0 frequency = 1 frequency => Keep values with a 0 in the position being considered.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Example
+
+```
+00100 X
+11110
+10110 
+10111
+10101
+01111 X
+00111 X
+11100
+10000
+11001
+00010 X
+01010 X
+```
+
+Start with all 12 numbers (lines) and consider only the first bit of each number (first column). There are more 1 bits (7) than 0 bits (5), so keep only the 7 numbers with a 1 in the first position: `11110, 10110, 10111, 10101, 11100, 10000, and 11001`.
+
+```
+11110 X
+10110
+10111
+10101
+11100 X
+10000
+11001 X
+```
+
+Then, consider the second bit of the 7 remaining numbers: there are more 0 bits (4) than 1 bits (3), so keep only the 4 numbers with a 0 in the second position: `10110, 10111, 10101, and 10000`.
+
+```
+10110 
+10111
+10101
+10000 X
+```
+
+In the third position, three of the four numbers have a 1, so keep those three: `10110, 10111, and 10101`.
+
+```
+10110
+10111
+10101 X
+```
+
+In the fourth position, two of the three numbers have a 1, so keep those two: `10110 and 10111`.
+
+```
+10110 X
+10111 
+```
+
+In the fifth position, there are an equal number of 0 bits and 1 bits (one each). So, to find the oxygen generator rating, keep the number with a 1 in that position: **10111**.
+
+**As there is only one number left, stop; the oxygen generator rating is 10111, or 23 in decimal.**
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Question...
+
+Use the binary numbers in your diagnostic report to calculate the oxygen generator rating and CO2 scrubber rating, then **multiply them (using decimal base)** together. **What is the life support rating of the submarine?**
 
 <!-- livebook:{"break_markdown":true} -->
 
