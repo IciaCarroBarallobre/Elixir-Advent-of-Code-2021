@@ -1,0 +1,34 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# Advent Of Code 21
+
+## Day 4
+
+In one day, you can get 2 stars by  solving 2 puzzle.
+
+Index
+
+* [Puzzle 1](#giant-squid-(puzzle-1/2))
+* [Puzzle 2](#giant-squid-(puzzle-2/2))
+
+```elixir
+input_puzzle_path = "<insert_path>/Elixir-Advent-of-Code/Puzzles/Day3/input.txt"
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"<insert_path>/Elixir-Advent-of-Code/Puzzles/Day3/input.txt"
+```
+
+## Giant Squid (Puzzle 1/2)
+
+TO-DO
+
+## Giant Squid (Puzzle 2/2)
+
+| Previous                     | Next                         |
+| ---------------------------- | ---------------------------: |
+| [Day 3](../Day3/Day3.livemd) | [Day 5](../Day5/Day5.livemd) |
+
+|[Return to puzzles index](../../AdventOfCode.livemd)

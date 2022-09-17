@@ -12,9 +12,14 @@ Index
 * [Puzzle 2](#binary-diagnostic-(puzzle-2/2))
 
 ```elixir
-input_puzzle_path = "<insert path here>/input.txt"
+input_puzzle_path = "<insert_path>/Elixir-Advent-of-Code/Puzzles/Day3/input.txt"
 ```
 
+<!-- livebook:{"output":true} -->
+
+```
+"<insert_path>/Elixir-Advent-of-Code/Puzzles/Day3/input.txt"
+```
 
 ## Binary Diagnostic (Puzzle 1/2)
 
@@ -142,17 +147,42 @@ diagnostic_report =
 ```
 
 ```elixir
-defmodule BinaryDiagnostic do
-  def greater(%{"0" => zeros, "1" => ones}), do: if(zeros < ones, do: "1", else: "0")
-  def greater(%{"0" => _}), do: "0"
-  def greater(%{"1" => _}), do: "1"
+defmodule Aux do
+  def most_frequent(%{"0" => n_zeros, "1" => n_ones}),
+    do: if(n_zeros <= n_ones, do: "1", else: "0")
+
+  def most_frequent(%{"0" => _}), do: "0"
+  def most_frequent(%{"1" => _}), do: "1"
+
+  def less_frequent(%{"0" => n_zeros, "1" => n_ones}),
+    do: if(n_ones >= n_zeros, do: "0", else: "1")
+
+  def less_frequent(%{"0" => _}), do: "1"
+  def less_frequent(%{"1" => _}), do: "0"
 
   def most_common_bit(list) do
     list
     |> Enum.frequencies()
-    # |> IO.inspect() #debug line
-    |> greater()
+    |> most_frequent()
   end
+
+  def least_common_bit(list) do
+    list
+    |> Enum.frequencies()
+    |> less_frequent()
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Aux, <<70, 79, 82, 49, 0, 0, 9, ...>>, {:least_common_bit, 1}}
+```
+
+```elixir
+defmodule DiagnosticConsumptionPower do
+  require Aux
 
   # Calculate GAMMA RATE
   def calculate_gamma_rate(diagnostic_report) do
@@ -162,7 +192,7 @@ defmodule BinaryDiagnostic do
   end
 
   def calculate_gamma_rate([h | t], acc) do
-    calculate_gamma_rate(t, acc <> most_common_bit(h))
+    calculate_gamma_rate(t, acc <> Aux.most_common_bit(h))
   end
 
   def calculate_gamma_rate(_, acc) do
@@ -187,10 +217,12 @@ defmodule BinaryDiagnostic do
 end
 
 gamma_rate =
-  BinaryDiagnostic.calculate_gamma_rate(diagnostic_report) |> IO.inspect(label: "Gamma rate")
+  DiagnosticConsumptionPower.calculate_gamma_rate(diagnostic_report)
+  |> IO.inspect(label: "Gamma rate")
 
 epsilon_rate =
-  BinaryDiagnostic.calculate_epsilon_rate(gamma_rate) |> IO.inspect(label: "Epsilon rate")
+  DiagnosticConsumptionPower.calculate_epsilon_rate(gamma_rate)
+  |> IO.inspect(label: "Epsilon rate")
 ```
 
 <!-- livebook:{"output":true} -->
@@ -243,7 +275,7 @@ Next, you should verify the **life support rating**, which can be determined by 
     )_     _(      |:._   .-|
     |;::    |      |:._     |
     |;:: O2 |      |:._ CO2 |
-    |;::    |      |:._     |
+    |;:: Gen|      |Scrubber|
     |;::-.._|      |:._     |
     `-.._..-'      `-.____.-'    cjr
 
@@ -346,7 +378,157 @@ In the fifth position, there are an equal number of 0 bits and 1 bits (one each)
 
 Use the binary numbers in your diagnostic report to calculate the oxygen generator rating and CO2 scrubber rating, then **multiply them (using decimal base)** together. **What is the life support rating of the submarine?**
 
-<!-- livebook:{"break_markdown":true} -->
+```elixir
+# Read the input file and split the bits
+diagnostic_report =
+  File.read!(input_puzzle_path)
+  |> String.split("\n", trim: true)
+  |> Enum.map(fn x -> String.graphemes(x) end)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[
+  ["0", "0", "0", "0", "1", "0", "0", "0", "0", "0", "1", "1"],
+  ["0", "0", "1", "0", "1", "0", "0", "0", "0", "1", "1", "1"],
+  ["0", "1", "1", "0", "1", "0", "0", "0", "0", "0", "1", "0"],
+  ["0", "0", "0", "0", "1", "1", "1", "1", "1", "1", "1", "0"],
+  ["1", "0", "1", "1", "0", "1", "0", "0", "0", "1", "0", "1"],
+  ["0", "0", "0", "1", "0", "0", "0", "1", "0", "1", "0", "0"],
+  ["1", "1", "1", "1", "0", "1", "1", "1", "1", "1", "1", "0"],
+  ["1", "1", "1", "1", "1", "1", "0", "0", "0", "0", "1", "0"],
+  ["0", "0", "0", "0", "1", "1", "0", "1", "0", "0", "1", "1"],
+  ["1", "0", "0", "0", "1", "1", "1", "0", "0", "0", "0", "0"],
+  ["1", "0", "1", "1", "1", "0", "1", "1", "0", "0", "0", "1"],
+  ["1", "1", "1", "0", "1", "1", "1", "1", "1", "1", "0", "1"],
+  ["1", "1", "1", "0", "1", "1", "0", "1", "1", "0", "0", "1"],
+  ["0", "1", "0", "1", "0", "1", "0", "0", "0", "0", "1", "0"],
+  ["0", "0", "0", "0", "1", "0", "0", "0", "1", "0", "0", "0"],
+  ["1", "0", "1", "0", "1", "0", "0", "1", "1", "1", "1", "1"],
+  ["0", "1", "0", "0", "0", "0", "1", "1", "1", "1", "0", "1"],
+  ["0", "1", "1", "0", "1", "0", "1", "1", "1", "1", "0", "0"],
+  ["1", "0", "1", "1", "1", "1", "0", "1", "0", "1", "1", "0"],
+  ["0", "0", "0", "1", "1", "0", "1", "1", "0", "1", "0", "1"],
+  ["0", "0", "1", "0", "1", "0", "0", "0", "0", "0", "0", "1"],
+  ["1", "1", "0", "1", "0", "1", "1", "0", "0", "1", "1", "0"],
+  ["1", "1", "1", "1", "1", "0", "0", "1", "0", "1", "0", "0"],
+  ["0", "0", "1", "0", "0", "0", "0", "0", "1", "0", "1", "1"],
+  ["1", "0", "0", "1", "1", "1", "1", "0", "1", "0", "0", "1"],
+  ["0", "0", "0", "0", "1", "0", "0", "1", "0", "0", "0", "1"],
+  ["1", "0", "0", "1", "0", "0", "1", "0", "1", "0", "1", "0"],
+  ["0", "1", "1", "0", "1", "0", "1", "1", "0", "1", "1", "1"],
+  ["0", "0", "0", "0", "0", "1", "1", "0", "0", "1", "0", "0"],
+  ["1", "0", "1", "1", "1", "1", "0", "0", "0", "1", "1", "1"],
+  ["0", "1", "0", "1", "0", "1", "1", "0", "1", "1", "0", "0"],
+  ["0", "0", "1", "1", "1", "1", "0", "1", "0", "0", "1", "0"],
+  ["0", "1", "0", "0", "0", "1", "0", "1", "1", "1", "0", "0"],
+  ["1", "1", "0", "1", "0", "1", "0", "1", "1", "0", "1", "1"],
+  ["0", "0", "0", "0", "1", "0", "1", "0", "1", "0", "0", "0"],
+  ["0", "1", "1", "0", "1", "1", "1", "0", "1", "1", "0", "1"],
+  ["1", "0", "1", "0", "0", "1", "0", "0", "0", "0", "1", "1"],
+  ["1", "0", "1", "1", "1", "1", "0", "0", "0", "0", "0", "0"],
+  ["0", "0", "1", "1", "1", "1", "1", "0", "1", "1", "1", ...],
+  ["0", "0", "1", "1", "0", "1", "1", "1", "0", "1", ...],
+  ["1", "1", "0", "1", "1", "0", "1", "1", "0", ...],
+  ["1", "0", "0", "0", "1", "1", "0", "0", ...],
+  ["0", "1", "0", "1", "1", "0", "1", ...],
+  ["0", "0", "1", "0", "1", "0", ...],
+  ["1", "1", "0", "1", "1", ...],
+  ["0", "0", "1", "0", ...],
+  ["1", "0", "0", ...],
+  ["1", "0", ...],
+  ["0", ...],
+  [...],
+  ...
+]
+```
+
+```elixir
+defmodule DiagnosticC02andO2 do
+  require Aux
+
+  def most_common_bit_of_a_column(diagnostic_report, pos) do
+    diagnostic_report
+    |> Enum.map(fn x -> Enum.at(x, pos) end)
+    |> Aux.most_common_bit()
+  end
+
+  def least_common_bit_of_a_column(diagnostic_report, pos) do
+    diagnostic_report
+    |> Enum.map(fn x -> Enum.at(x, pos) end)
+    |> Aux.least_common_bit()
+  end
+
+  def calculate_rating(diagnostic_report, criteria) do
+    calculate_rating(diagnostic_report, 0, criteria)
+  end
+
+  def apply_a_criteria(atom, list, pos) do
+    case atom do
+      :o2generator -> most_common_bit_of_a_column(list, pos)
+      :co2strugger -> least_common_bit_of_a_column(list, pos)
+      _ -> raise("Criteria not defined")
+    end
+  end
+
+  def calculate_rating(diagnostic_report, pos, criteria) do
+    case diagnostic_report do
+      [h | []] ->
+        Enum.join([h])
+
+      [h | t] ->
+        calculate_rating(
+          Enum.filter(
+            [h | t],
+            fn x ->
+              Enum.at(x, pos) == apply_a_criteria(criteria, [h | t], pos)
+            end
+          ),
+          pos + 1,
+          criteria
+        )
+
+      # Error case
+      _ ->
+        diagnostic_report
+    end
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, DiagnosticC02andO2, <<70, 79, 82, 49, 0, 0, 14, ...>>, {:calculate_rating, 3}}
+```
+
+```elixir
+{rate_O2, _} =
+  DiagnosticC02andO2.calculate_rating(diagnostic_report, :o2generator)
+  |> IO.inspect()
+  |> Integer.parse(2)
+
+{rate_CO2, _} =
+  DiagnosticC02andO2.calculate_rating(diagnostic_report, :co2strugger)
+  |> IO.inspect()
+  |> Integer.parse(2)
+
+rate_CO2 * rate_O2
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"101110111101"
+"011001010000"
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+4856080
+```
 
 | Previous                     | Next                         |
 | ---------------------------- | ---------------------------: |
