@@ -307,4 +307,4 @@ end
 | ---------------------------- | ---------------------------: |
 | [Day 3](../Day3/Day3.livemd) | [Day 5](../Day5/Day5.livemd) |
 
-|[Return to puzzles index](../../AdventOfCode.livemd)
+[Return to puzzles index](../../AdventOfCode.livemd)

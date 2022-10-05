@@ -61,7 +61,8 @@ Your instincts tell you that in order to save Christmas, **you'll need to get al
 * [Day 1](./Puzzles/Day1/Day1.livemd)
 * [Day 2](./Puzzles/Day2/Day2.livemd)
 * [Day 3](./Puzzles/Day3/Day3.livemd)
-* [Day 4](./Puzzles/Day4/Day4.livemd)
+* [Day 4 (TO-DO 2/2)](./Puzzles/Day4/Day4.livemd)
 * [Day 5](./Puzzles/Day5/Day5.livemd)
+* [Day 6](./Puzzles/Day6/Day6.livemd)
 
 ...

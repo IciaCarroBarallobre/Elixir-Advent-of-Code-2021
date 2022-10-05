@@ -291,4 +291,4 @@ WindowsIncrease.increase_count_windows3(measuremnts)
 | -------- | ---------------------------: |
 | -        | [Day 2](../Day2/Day2.livemd) |
 
-|[Return to puzzles index](../../AdventOfCode.livemd)
+[Return to puzzles index](../../AdventOfCode.livemd)

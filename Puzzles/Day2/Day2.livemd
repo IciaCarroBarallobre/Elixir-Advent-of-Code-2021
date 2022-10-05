@@ -355,4 +355,4 @@ position[:horizontal] * position[:depth]
 | ---------------------------- | ---------------------------: |
 | [Day 1](../Day1/Day1.livemd) | [Day 3](../Day3/Day3.livemd) |
 
-|[Return to puzzles index](../../AdventOfCode.livemd)
+[Return to puzzles index](../../AdventOfCode.livemd)

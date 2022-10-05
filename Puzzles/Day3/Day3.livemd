@@ -534,4 +534,4 @@ rate_CO2 * rate_O2
 | ---------------------------- | ---------------------------: |
 | [Day 2](../Day2/Day2.livemd) | [Day 4](../Day4/Day4.livemd) |
 
-|[Return to puzzles index](../../AdventOfCode.livemd)
+[Return to puzzles index](../../AdventOfCode.livemd)
