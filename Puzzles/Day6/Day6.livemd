@@ -1,0 +1,211 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# Advent Of Code 21
+
+## Day 6
+
+In one day, you can get 2 stars by  solving 2 puzzle.
+
+Index
+
+* [Puzzle 1](#lanternfish-(puzzle-1/2))
+* [Puzzle 2](#Lanternfish-(puzzle-2/2))
+
+```elixir
+input_puzzle_path = "./Projects/Elixir-Advent-of-Code/Puzzles/Day6/input.txt"
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"./Projects/Elixir-Advent-of-Code/Puzzles/Day6/input.txt"
+```
+
+## Lanternfish (Puzzle 1/2)
+
+A massive school of glowing lanternfish swims past. They must spawn quickly to reach such large numbers so you guess that **each lanternfish creates a new lanternfish once every `7 days`**.
+
+```
+Day 3
+              0
+              __
+            __/  O 
+         \\/  o\ .
+         //\___=
+            ''
+```
+
+However, **this process isn't necessarily synchronized between every lanternfish** - one lanternfish might have 2 days left until it creates another lanternfish, while another might have 4. So,you can **model each fish as a single number** that represents the number of days until it creates a new lanternfish.
+
+```
+Day 4
+
+ 8 days   6 days        
+    |      |     
+    |      |   __
+            __/  O 
+  >('>   \\/  o\ .
+         //\___=
+            ''
+```
+
+Furthermore, you reason, a **new lanternfish** would surely need **two more days for its first producing cycle `2+7 = 9`**.
+
+Example of a lanternfish with an internal timer value of 3:
+
+```
+               FISH1  FISH2
+Initial state:   3
+After  1 day:    2
+After  2 days:   1
+After  3 days:   0 
+After  4 days:   6,     8     (7 not 6 and 8 not 9 because 0 is a valid value)
+After  5 days:   5,     7
+```
+
+Realizing what you're trying to do, the submarine automatically produces a list of the ages of several hundred nearby lanternfish (your puzzle input).
+
+<!-- livebook:{"break_markdown":true} -->
+
+Example of multiple lanterfish list: `3,4,3,1,2`. Simulating these fish over several days would proceed as follows:
+
+```
+Initial state: 3,4,3,1,2
+After  1 day:  2,3,2,0,1
+After  2 days: 1,2,1,6,0,8
+After  3 days: 0,1,0,5,6,7,8
+After  4 days: 6,0,6,4,5,6,7,8,8
+After  5 days: 5,6,5,3,4,5,6,7,7,8
+After  6 days: 4,5,4,2,3,4,5,6,6,7
+After  7 days: 3,4,3,1,2,3,4,5,5,6
+After  8 days: 2,3,2,0,1,2,3,4,4,5
+After  9 days: 1,2,1,6,0,1,2,3,3,4,8
+After 10 days: 0,1,0,5,6,0,1,2,2,3,7,8
+After 11 days: 6,0,6,4,5,6,0,1,1,2,6,7,8,8,8
+After 12 days: 5,6,5,3,4,5,6,0,0,1,5,6,7,7,7,8,8
+After 13 days: 4,5,4,2,3,4,5,6,6,0,4,5,6,6,6,7,7,8,8
+After 14 days: 3,4,3,1,2,3,4,5,5,6,3,4,5,5,5,6,6,7,7,8
+After 15 days: 2,3,2,0,1,2,3,4,4,5,2,3,4,4,4,5,5,6,6,7
+After 16 days: 1,2,1,6,0,1,2,3,3,4,1,2,3,3,3,4,4,5,5,6,8
+After 17 days: 0,1,0,5,6,0,1,2,2,3,0,1,2,2,2,3,3,4,4,5,7,8
+After 18 days: 6,0,6,4,5,6,0,1,1,2,6,0,1,1,1,2,2,3,3,4,6,7,8,8,8,8
+```
+
+Each day:
+
+* A 0 becomes a 6 and adds a new 8 to the end of the list.
+* Other number decreases by 1 if it was present at the start of the day.
+
+In this example, after 18 days, there are a total of 26 fish. After 80 days, there would be a total of 5934.
+
+Find a way to simulate lanternfish. **How many lanternfish would there be after 80 days?**
+
+```elixir
+{:ok, file} = File.open(input_puzzle_path, [:read, :compressed])
+
+input =
+  file
+  |> IO.read(:eof)
+  |> String.replace(~r/\n/, "")
+  |> String.split(",")
+  |> Enum.map(&String.to_integer(&1))
+
+test_input = [3, 4, 3, 1, 2]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[3, 4, 3, 1, 2]
+```
+
+```elixir
+defmodule CountLanterfish do
+  def create_news(list) do
+    list ++ for fish <- list, fish == 0, do: 9
+  end
+
+  def reset_old_and_compute(list) do
+    Enum.map(list, fn x ->
+      if x == 0 do
+        6
+      else
+        x - 1
+      end
+    end)
+  end
+
+  def number_of_fish_before_another_day(list, 0) do
+    length(list)
+  end
+
+  def number_of_fish_before_another_day(list, days) do
+    list
+    |> create_news()
+    |> reset_old_and_compute()
+    |> number_of_fish_before_another_day(days - 1)
+  end
+end
+
+days = 80
+
+{uSec, result} =
+  :timer.tc(fn -> CountLanterfish.number_of_fish_before_another_day(input, days) end)
+
+IO.inspect(result, label: "Result for #{days} days")
+IO.inspect(uSec / 1_000_000, label: "Tiempo (sec)")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Result for 80 days: 372300
+Tiempo (sec): 0.195174
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+0.195174
+```
+
+## Lanternfish (Puzzle 2/2)
+
+Suppose the lanternfish live forever and have unlimited food and space. Would they take over the entire ocean? After 256 days in the example above, there would be a total of 26984457539 lanternfish!
+
+How many lanternfish would there be after 256 days?
+
+```elixir
+input
+|> Enum.frequencies()
+|> IO.inspect(label: "Frequencies of values ")
+|> Map.values()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Frequencies of values : %{1 => 155, 2 => 31, 3 => 33, 4 => 38, 5 => 43}
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[155, 31, 33, 38, 43]
+```
+
+```elixir
+days = 256
+
+{uSec, result} =
+  :timer.tc(fn -> CountLanterfish.number_of_fish_before_another_day(input, days) end)
+
+IO.inspect(result, label: "Result for #{days} days")
+IO.inspect(uSec / 1_000_000, label: "Tiempo (sec)")
+```
+
+| Previous                     | Next |
+| ---------------------------- | ---: |
+| [Day 5](../Day5/Day5.livemd) | --   |
+
+[Return to puzzles index](../../AdventOfCode.livemd)
