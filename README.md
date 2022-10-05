@@ -1,4 +1,4 @@
-# Elixir-Advent-of-Code 🤶
+# Elixir-Advent-of-Code-2021 🤶
 
 Hey! I will solve advent of code (AOC) using Elixir 💧 &amp; Livebook 📚. 
 
