@@ -1,8 +1,8 @@
 <!-- livebook:{"persist_outputs":true} -->
 
-# Advent Of Code 21
+# Advent Of Code 21 - Day 5
 
-## Day 5
+## Index & Initial vars
 
 In one day, you can get 2 stars by  solving 2 puzzle.
 
@@ -12,13 +12,7 @@ Index
 * [Puzzle 2](#hydrothermal-venture-(puzzle-2/2))
 
 ```elixir
-input_puzzle_path = "./Projects/Elixir-Advent-of-Code/Puzzles/Day5/input.txt"
-```
-
-<!-- livebook:{"output":true} -->
-
-```
-"./Projects/Elixir-Advent-of-Code/Puzzles/Day5/input.txt"
+input_puzzle_path = "./<Insert path>/Elixir-Advent-of-Code/Puzzles/Day4/input.txt"
 ```
 
 ## Hydrothermal Venture (Puzzle 1/2)

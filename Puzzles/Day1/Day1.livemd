@@ -1,8 +1,8 @@
 <!-- livebook:{"persist_outputs":true} -->
 
-# Advent Of Code 21
+# Advent Of Code 21 - Day1
 
-## Day 1
+## Index & Initial vars
 
 In one day, you can get 2 stars by  solving 2 puzzle.
 

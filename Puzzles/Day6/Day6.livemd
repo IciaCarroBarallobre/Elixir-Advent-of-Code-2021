@@ -1,18 +1,18 @@
 <!-- livebook:{"persist_outputs":true} -->
 
-# Advent Of Code 21
+# Advent Of Code 21 - Day6
 
-## Day 6
+## Index & Initial vars
 
 In one day, you can get 2 stars by  solving 2 puzzle.
 
 Index
 
 * [Puzzle 1](#lanternfish-(puzzle-1/2))
-* [Puzzle 2](#Lanternfish-(puzzle-2/2))
+* [Puzzle 2](#lanternfish-(puzzle-2/2))
 
 ```elixir
-input_puzzle_path = "./Projects/Elixir-Advent-of-Code/Puzzles/Day6/input.txt"
+input_puzzle_path = "./<Insert path>/Elixir-Advent-of-Code/Puzzles/Day6/input.txt"
 ```
 
 <!-- livebook:{"output":true} -->
@@ -109,8 +109,16 @@ input =
   |> String.replace(~r/\n/, "")
   |> String.split(",")
   |> Enum.map(&String.to_integer(&1))
+  |> IO.inspect(label: "Real input")
 
 test_input = [3, 4, 3, 1, 2]
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Real input: [1, 1, 5, 2, 1, 1, 5, 5, 3, 1, 1, 1, 1, 1, 1, 3, 4, 5, 2, 1, 2, 1, 1, 1, 1, 1,
+ 1, 1, 1, 3, 1, 1, 5, 4, 5, 1, 5, 3, 1, 3, 2, 1, 1, 1, 1, 2, 4, 1, 5, 1, ...]
 ```
 
 <!-- livebook:{"output":true} -->
@@ -160,13 +168,13 @@ IO.inspect(uSec / 1_000_000, label: "Tiempo (sec)")
 
 ```
 Result for 80 days: 372300
-Tiempo (sec): 0.195174
+Tiempo (sec): 0.181043
 ```
 
 <!-- livebook:{"output":true} -->
 
 ```
-0.195174
+0.181043
 ```
 
 ## Lanternfish (Puzzle 2/2)
@@ -198,7 +206,7 @@ Frequencies of values : %{1 => 155, 2 => 31, 3 => 33, 4 => 38, 5 => 43}
 days = 256
 
 {uSec, result} =
-  :timer.tc(fn -> CountLanterfish.number_of_fish_before_another_day(input, days) end)
+  :timer.tc(fn -> CountLanterfish.number_of_fish_before_another_day(test_input, days) end)
 
 IO.inspect(result, label: "Result for #{days} days")
 IO.inspect(uSec / 1_000_000, label: "Tiempo (sec)")
