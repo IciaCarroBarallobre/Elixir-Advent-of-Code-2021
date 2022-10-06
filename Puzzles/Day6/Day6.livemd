@@ -271,8 +271,8 @@ Tiempo (sec): 6.14e-4
 6.14e-4
 ```
 
-| Previous                     | Next |
-| ---------------------------- | ---: |
-| [Day 5](../Day5/Day5.livemd) | --   |
+| Previous                     | Next                         |
+| ---------------------------- | ---------------------------: |
+| [Day 5](../Day5/Day5.livemd) | [Day 7](../Day7/Day7.livemd) |
 
 [Return to puzzles index](../../AdventOfCode.livemd)
