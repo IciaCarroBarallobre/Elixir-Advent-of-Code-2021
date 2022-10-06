@@ -110,8 +110,6 @@ input =
   |> String.split(",")
   |> Enum.map(&String.to_integer(&1))
   |> IO.inspect(label: "Real input")
-
-test_input = [3, 4, 3, 1, 2]
 ```
 
 <!-- livebook:{"output":true} -->
@@ -124,13 +122,14 @@ Real input: [1, 1, 5, 2, 1, 1, 5, 5, 3, 1, 1, 1, 1, 1, 1, 3, 4, 5, 2, 1, 2, 1, 1
 <!-- livebook:{"output":true} -->
 
 ```
-[3, 4, 3, 1, 2]
+[1, 1, 5, 2, 1, 1, 5, 5, 3, 1, 1, 1, 1, 1, 1, 3, 4, 5, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 5,
+ 4, 5, 1, 5, 3, 1, 3, 2, 1, 1, 1, 1, 2, 4, 1, 5, 1, ...]
 ```
 
 ```elixir
 defmodule CountLanterfish do
   def create_news(list) do
-    list ++ for fish <- list, fish == 0, do: 9
+    for(fish <- list, fish == 0, do: 9) ++ list
   end
 
   def reset_old_and_compute(list) do
@@ -143,24 +142,31 @@ defmodule CountLanterfish do
     end)
   end
 
-  def number_of_fish_before_another_day(list, 0) do
+  def number_of_fish_after_n_day(list, 0) do
     length(list)
   end
 
-  def number_of_fish_before_another_day(list, days) do
+  def number_of_fish_after_n_day(list, days) do
     list
     |> create_news()
     |> reset_old_and_compute()
-    |> number_of_fish_before_another_day(days - 1)
+    |> number_of_fish_after_n_day(days - 1)
   end
 end
+```
 
+<!-- livebook:{"output":true} -->
+
+```
+{:module, CountLanterfish, <<70, 79, 82, 49, 0, 0, 10, ...>>, {:number_of_fish_after_n_day, 2}}
+```
+
+```elixir
 days = 80
 
-{uSec, result} =
-  :timer.tc(fn -> CountLanterfish.number_of_fish_before_another_day(input, days) end)
+{uSec, resultA} = :timer.tc(fn -> CountLanterfish.number_of_fish_after_n_day(input, days) end)
 
-IO.inspect(result, label: "Result for #{days} days")
+IO.inspect(resultA, label: "Result for #{days} days")
 IO.inspect(uSec / 1_000_000, label: "Tiempo (sec)")
 ```
 
@@ -168,48 +174,101 @@ IO.inspect(uSec / 1_000_000, label: "Tiempo (sec)")
 
 ```
 Result for 80 days: 372300
-Tiempo (sec): 0.181043
+Tiempo (sec): 0.165988
 ```
 
 <!-- livebook:{"output":true} -->
 
 ```
-0.181043
+0.165988
 ```
 
 ## Lanternfish (Puzzle 2/2)
+
+```elixir
+defmodule CountLanterfish2 do
+  # Decrease the number and in case of 0, create news and reset olds
+  def step(list_of_t) do
+    list_of_t
+    |> Enum.reduce(
+      [],
+      fn {k, v}, acc ->
+        if k == 0 do
+          [{6, v}, {8, v} | acc]
+        else
+          [{k - 1, v} | acc]
+        end
+      end
+    )
+  end
+
+  # Group equal keys adding its frequencies in a unique key
+  def regroup(list_of_t) do
+    list_of_t
+    |> Enum.map(fn {key, value} -> {Integer.to_string(key), value} end)
+    |> Enum.reduce(
+      %{},
+      fn {key, value}, acc ->
+        Map.update(acc, key, value, fn existing_value -> existing_value + value end)
+      end
+    )
+    |> Enum.to_list()
+    |> Enum.map(fn {k, v} -> {String.to_integer(k), v} end)
+  end
+
+  # Sum of frequencies
+  def calculate(list, 0) do
+    Enum.reduce(list, 0, fn {_, v}, acc -> v + acc end)
+  end
+
+  def calculate(list, days) do
+    list
+    |> step()
+    |> regroup()
+    |> calculate(days - 1)
+  end
+
+  def calculate_n_of_fish_after_n_days(list, days) do
+    list
+    |> Enum.frequencies()
+    |> Enum.to_list()
+    |> calculate(days)
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, CountLanterfish2, <<70, 79, 82, 49, 0, 0, 14, ...>>,
+ {:calculate_n_of_fish_after_n_days, 2}}
+```
 
 Suppose the lanternfish live forever and have unlimited food and space. Would they take over the entire ocean? After 256 days in the example above, there would be a total of 26984457539 lanternfish!
 
 How many lanternfish would there be after 256 days?
 
 ```elixir
-input
-|> Enum.frequencies()
-|> IO.inspect(label: "Frequencies of values ")
-|> Map.values()
-```
-
-<!-- livebook:{"output":true} -->
-
-```
-Frequencies of values : %{1 => 155, 2 => 31, 3 => 33, 4 => 38, 5 => 43}
-```
-
-<!-- livebook:{"output":true} -->
-
-```
-[155, 31, 33, 38, 43]
-```
-
-```elixir
 days = 256
 
-{uSec, result} =
-  :timer.tc(fn -> CountLanterfish.number_of_fish_before_another_day(test_input, days) end)
+{uSec, resultA} =
+  :timer.tc(fn -> CountLanterfish2.calculate_n_of_fish_after_n_days(input, days) end)
 
-IO.inspect(result, label: "Result for #{days} days")
+IO.inspect(resultA, label: "Result for #{days} days")
 IO.inspect(uSec / 1_000_000, label: "Tiempo (sec)")
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+Result for 256 days: 1675781200288
+Tiempo (sec): 6.14e-4
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+6.14e-4
 ```
 
 | Previous                     | Next |
