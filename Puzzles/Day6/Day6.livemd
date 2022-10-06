@@ -185,6 +185,10 @@ Tiempo (sec): 0.165988
 
 ## Lanternfish (Puzzle 2/2)
 
+Suppose the lanternfish live forever and have unlimited food and space. Would they take over the entire ocean? After 256 days in the example above, there would be a total of 26984457539 lanternfish!
+
+How many lanternfish would there be after 256 days?
+
 ```elixir
 defmodule CountLanterfish2 do
   # Decrease the number and in case of 0, create news and reset olds
@@ -243,10 +247,6 @@ end
 {:module, CountLanterfish2, <<70, 79, 82, 49, 0, 0, 14, ...>>,
  {:calculate_n_of_fish_after_n_days, 2}}
 ```
-
-Suppose the lanternfish live forever and have unlimited food and space. Would they take over the entire ocean? After 256 days in the example above, there would be a total of 26984457539 lanternfish!
-
-How many lanternfish would there be after 256 days?
 
 ```elixir
 days = 256
