@@ -12,7 +12,7 @@ Index
 * [Puzzle 2](#lanternfish-(puzzle-2/2))
 
 ```elixir
-input_puzzle_path = "./<Insert path>/Elixir-Advent-of-Code/Puzzles/Day6/input.txt"
+input_puzzle_path = "./Projects/Elixir-Advent-of-Code/Puzzles/Day6/input.txt"
 ```
 
 <!-- livebook:{"output":true} -->
@@ -174,13 +174,13 @@ IO.inspect(uSec / 1_000_000, label: "Tiempo (sec)")
 
 ```
 Result for 80 days: 372300
-Tiempo (sec): 0.165988
+Tiempo (sec): 0.158105
 ```
 
 <!-- livebook:{"output":true} -->
 
 ```
-0.165988
+0.158105
 ```
 
 ## Lanternfish (Puzzle 2/2)
@@ -192,50 +192,37 @@ How many lanternfish would there be after 256 days?
 ```elixir
 defmodule CountLanterfish2 do
   # Decrease the number and in case of 0, create news and reset olds
-  def step(list_of_t) do
-    list_of_t
+  def step(frequencies) do
+    frequencies
     |> Enum.reduce(
-      [],
-      fn {k, v}, acc ->
-        if k == 0 do
-          [{6, v}, {8, v} | acc]
+      %{},
+      fn {key, value}, acc ->
+        if key == 0 do
+          acc
+          |> Map.update(6, value, fn existing_value -> value + existing_value end)
+          |> Map.update(8, value, fn existing_value -> value + existing_value end)
         else
-          [{k - 1, v} | acc]
+          Map.update(acc, key - 1, value, fn existing_value -> value + existing_value end)
         end
       end
     )
   end
 
-  # Group equal keys adding its frequencies in a unique key
-  def regroup(list_of_t) do
-    list_of_t
-    |> Enum.map(fn {key, value} -> {Integer.to_string(key), value} end)
-    |> Enum.reduce(
-      %{},
-      fn {key, value}, acc ->
-        Map.update(acc, key, value, fn existing_value -> existing_value + value end)
-      end
-    )
-    |> Enum.to_list()
-    |> Enum.map(fn {k, v} -> {String.to_integer(k), v} end)
-  end
-
   # Sum of frequencies
-  def calculate(list, 0) do
-    Enum.reduce(list, 0, fn {_, v}, acc -> v + acc end)
+  def calculate(frequencies, 0) do
+    frequencies
+    |> Enum.reduce(0, fn {_, v}, acc -> v + acc end)
   end
 
-  def calculate(list, days) do
-    list
+  def calculate(frequencies, days) do
+    frequencies
     |> step()
-    |> regroup()
     |> calculate(days - 1)
   end
 
   def calculate_n_of_fish_after_n_days(list, days) do
     list
     |> Enum.frequencies()
-    |> Enum.to_list()
     |> calculate(days)
   end
 end
@@ -244,7 +231,7 @@ end
 <!-- livebook:{"output":true} -->
 
 ```
-{:module, CountLanterfish2, <<70, 79, 82, 49, 0, 0, 14, ...>>,
+{:module, CountLanterfish2, <<70, 79, 82, 49, 0, 0, 12, ...>>,
  {:calculate_n_of_fish_after_n_days, 2}}
 ```
 
@@ -262,13 +249,13 @@ IO.inspect(uSec / 1_000_000, label: "Tiempo (sec)")
 
 ```
 Result for 256 days: 1675781200288
-Tiempo (sec): 6.14e-4
+Tiempo (sec): 2.04e-4
 ```
 
 <!-- livebook:{"output":true} -->
 
 ```
-6.14e-4
+2.04e-4
 ```
 
 | Previous                     | Next                         |
