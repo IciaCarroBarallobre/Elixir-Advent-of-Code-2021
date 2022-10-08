@@ -122,24 +122,29 @@ The cost of fuel to go to the pos mean from pos y:
 
 ```elixir
 defmodule LessFuelConsumption do
-  def mean_point(frequencies) do
-    # TO-DO
-  end
-
   def absolute_value(number) do
     if number >= 0, do: number, else: number * -1
   end
 
-  def calculate(input) do
+  def cost(input, point) do
+    input
+    |> Enum.frequencies()
+    |> Enum.reduce(0, fn {pos, frequency}, acc ->
+      acc + absolute_value(pos - point) * frequency
+    end)
+  end
+
+  def calculate_less_cost(input) do
     frequencies = Enum.frequencies(input)
+    keys = Map.keys(frequencies)
+    points = Enum.to_list(Enum.min(keys)..Enum.max(keys))
 
-    mean =
-      frequencies
-      |> mean_point()
-      |> IO.inspect()
+    costs = Enum.reduce(points, %{}, fn point, acc -> Map.put(acc, point, cost(input, point)) end)
 
-    frequencies
-    |> Enum.reduce(0, fn {pos, frequency}, acc -> acc + absolute_value(pos - mean) * frequency end)
+    costs
+    |> Enum.reduce(fn {k, v}, {acc_k, acc_v} ->
+      if v < acc_v, do: {k, v}, else: {acc_k, acc_v}
+    end)
   end
 end
 ```
@@ -147,29 +152,98 @@ end
 <!-- livebook:{"output":true} -->
 
 ```
-warning: variable "frequencies" is unused (if the variable is not meant to be used, prefix it with an underscore)
-  Projects/Elixir-Advent-of-Code/Puzzles/Day7/Day7.livemd#cell:2: LessFuelConsumption.mean_point/1
-
-```
-
-<!-- livebook:{"output":true} -->
-
-```
-{:module, LessFuelConsumption, <<70, 79, 82, 49, 0, 0, 10, ...>>, {:calculate, 1}}
+{:module, LessFuelConsumption, <<70, 79, 82, 49, 0, 0, 13, ...>>, {:calculate_less_cost, 1}}
 ```
 
 ```elixir
-test = [16, 1, 2, 0, 4, 2, 7, 1, 2, 14]
-LessFuelConsumption.calculate(test)
+LessFuelConsumption.calculate_less_cost(input)
 ```
 
 <!-- livebook:{"output":true} -->
 
 ```
-nil
+{330, 329389}
 ```
 
 ## The Treachery of Whales (Puzzle 2/2)
+
+The crabs don't seem interested in your proposed solution. Perhaps you misunderstand crab engineering?
+
+As it turns out, **crab submarine engines don't burn fuel at a constant rate**. Instead, each change of **1 step in horizontal position costs 1 more unit of fuel than the last**: the first step costs 1, the second step costs 2, the third step costs 3, and so on.
+
+As each crab moves, moving further becomes more expensive. This changes the best horizontal position to align them all on; in the example above, this becomes 5:
+
+* Move from 16 to 5: 66 fuel
+* Move from 1 to 5: 10 fuel
+* Move from 2 to 5: 6 fuel
+* Move from 0 to 5: 15 fuel
+* Move from 4 to 5: 1 fuel
+* Move from 2 to 5: 6 fuel
+* Move from 7 to 5: 3 fuel
+* Move from 1 to 5: 10 fuel
+* Move from 2 to 5: 6 fuel
+* Move from 14 to 5: 45 fuel
+
+This costs a total of 168 fuel. This is the new cheapest possible outcome; the old alignment position (2) now costs 206 fuel instead.
+
+Determine the horizontal position that the crabs can align to using the least fuel possible so they can make you an escape route! How much fuel must they spend to align to that position?
+
+<!-- livebook:{"break_markdown":true} -->
+
+To compute this cost we can use...
+
+$\sum_{n=1}^{z}n = \frac{(x+1)x}{2}$
+
+```elixir
+defmodule LessFuelConsumptionCrabsEngineering do
+  def absolute_value(number) do
+    if number >= 0, do: number, else: number * -1
+  end
+
+  def compute_cost(pos, point) do
+    absolute_value(pos - point)
+    |> then(fn x -> Kernel.round(x * (x + 1) / 2) end)
+  end
+
+  def cost(input, point) do
+    input
+    |> Enum.frequencies()
+    |> Enum.reduce(0, fn {pos, frequency}, acc ->
+      acc + compute_cost(pos, point) * frequency
+    end)
+  end
+
+  def calculate_less_cost(input) do
+    frequencies = Enum.frequencies(input)
+    keys = Map.keys(frequencies)
+    points = Enum.to_list(Enum.min(keys)..Enum.max(keys))
+
+    costs = Enum.reduce(points, %{}, fn point, acc -> Map.put(acc, point, cost(input, point)) end)
+
+    costs
+    |> Enum.reduce(fn {k, v}, {acc_k, acc_v} ->
+      if v < acc_v, do: {k, v}, else: {acc_k, acc_v}
+    end)
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, LessFuelConsumptionCrabsEngineering, <<70, 79, 82, 49, 0, 0, 14, ...>>,
+ {:calculate_less_cost, 1}}
+```
+
+```elixir
+LessFuelConsumptionCrabsEngineering.calculate_less_cost(input)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{459, 86397080}
+```
 
 | Previous                     | Next |
 | ---------------------------- | ---: |
