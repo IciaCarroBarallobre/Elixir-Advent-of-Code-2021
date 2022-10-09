@@ -1,0 +1,130 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# Advent Of Code 21 - Day7
+
+## Index & Initial vars
+
+In one day, you can get 2 stars by  solving 2 puzzle.
+
+Index
+
+* [Puzzle 1](#seven-segment-search-(puzzle-1/2))
+* [Puzzle 2](#seven-segment-search-(puzzle-2/2))
+
+```elixir
+input_puzzle_path = "./Projects/Elixir-Advent-of-Code/Puzzles/Day8/input.txt"
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"./Projects/Elixir-Advent-of-Code/Puzzles/Day7/input.txt"
+```
+
+## Seven segment search (Puzzle 1/2)
+
+You barely reach the safety of the cave when the whale smashes into the cave mouth, collapsing it. Sensors indicate another exit to this cave at a much greater depth, so you have no choice but to press on.
+
+As your submarine slowly makes its way through the cave system, you notice that the four-digit **[seven-segment displays](https://en.wikipedia.org/wiki/Seven-segment_display)** in your submarine are malfunctioning.
+
+```
+-----------------------------------------------------------------------------------
+
+
+            _,.-------._
+   /\__/\  /            \
+   \_  _/ /              \
+     \ \_|           @ __|                    |_   
+      \                \_               _____|~ |____    
+       \     ,__/       /             (  --         ~~~~--_,
+        ---------------                ~~~~~~~~~~~~~~~~~~~'` 
+                           🦀       
+                      ---------         ---------
+                               |        |   
+                              /          \
+                 __  ________/            \___________
+
+```
+
+Each digit of a **seven-segment** display is rendered by turning **on or off any of seven segments named a through g**:
+
+```
+  0:      1:      2:      3:      4:
+ aaaa    ....    aaaa    aaaa    ....
+b    c  .    c  .    c  .    c  b    c
+b    c  .    c  .    c  .    c  b    c
+ ....    ....    dddd    dddd    dddd
+e    f  .    f  e    .  .    f  .    f
+e    f  .    f  e    .  .    f  .    f
+ gggg    ....    gggg    gggg    ....
+
+  5:      6:      7:      8:      9:
+ aaaa    aaaa    aaaa    aaaa    aaaa
+b    .  b    .  .    c  b    c  b    c
+b    .  b    .  .    c  b    c  b    c
+ dddd    dddd    ....    dddd    dddd
+.    f  e    f  .    f  e    f  .    f
+.    f  e    f  .    f  e    f  .    f
+ gggg    gggg    ....    gggg    gggg
+```
+
+So...
+
+* To render a `1`, `only segments c and f would be turned on`; the rest would be off.
+* To render a `7`, `only segments a, c, and f would be turned on`.
+
+The problem is that the signals which control **the segments have been mixed up on each display**. For each display, you watch the changing signals for a while, and then write down a single four digit output value (your puzzle input).
+
+Using the signal patterns, you should be able to work out which pattern corresponds to which digit. For example, here is what you might see in a single entry in your notes:
+
+```
+acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab |
+cdfeb fcadb cdfeb cdbaf
+```
+
+Each entry consists of **ten unique signal patterns**, a | delimiter, and finally **the four digit output value**. Using this information, you should be able to work out which combination of signal wires corresponds to each of the ten digits. Then, you can decode the four digit output value. Unfortunately, in the above example, all of the digits in the output value (cdfeb fcadb cdfeb cdbaf) use five segments and are more difficult to deduce.
+
+For now, focus on the easy digits. Consider this larger example:
+
+```
+be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb |
+fdgacbe cefdb cefbgd gcbe
+edbfga begcd cbg gc gcadebf fbgde acbgfd abcde gfcbed gfec |
+fcgedb cgb dgebacf gc
+fgaebd cg bdaec gdafb agbcfd gdcbef bgcad gfac gcb cdgabef |
+cg cg fdcagb cbg
+fbegcd cbd adcefb dageb afcb bc aefdc ecdab fgdeca fcdbega |
+efabcd cedba gadfec cb
+aecbfdg fbg gf bafeg dbefa fcge gcbea fcaegb dgceab fcbdga |
+gecf egdcabf bgf bfgea
+fgeab ca afcebg bdacfeg cfaedg gcfdb baec bfadeg bafgc acf |
+gebdcfa ecba ca fadegcb
+dbcfg fgd bdegcaf fgec aegbdf ecdfab fbedc dacgb gdcebf gf |
+cefg dcbef fcge gbcadfe
+bdfegc cbegaf gecbf dfcage bdacg ed bedf ced adcbefg gebcd |
+ed bcgafe cdgba cbgef
+egadfb cdbfeg cegd fecab cgb gbdefca cg fgcdab egfdb bfceg |
+gbdfcae bgc cg cgb
+gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc |
+fgae cfgab fg bagce
+```
+
+Because the digits 1, 4, 7, and 8 each use a unique number of segments, you should be able to tell which combinations of signals correspond to those digits. Counting only digits in the output values (the part after | on each line), in the above example, there are 26 instances of digits that use a unique number of segments (highlighted above).
+
+In the output values, how many times do digits 1, 4, 7, or 8 appear?
+
+```elixir
+
+```
+
+## Seven segment search (Puzzle 2/2)
+
+```elixir
+
+```
+
+| Previous                     | Next |
+| ---------------------------- | ---: |
+| [Day 7](../Day7/Day7.livemd) | --   |
+
+[Return to puzzles index](../../AdventOfCode.livemd)

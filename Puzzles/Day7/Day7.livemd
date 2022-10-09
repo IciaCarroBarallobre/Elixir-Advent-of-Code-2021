@@ -245,8 +245,8 @@ LessFuelConsumptionCrabsEngineering.calculate_less_cost(input)
 {459, 86397080}
 ```
 
-| Previous                     | Next |
-| ---------------------------- | ---: |
-| [Day 6](../Day6/Day6.livemd) | --   |
+| Previous                     | Next                         |
+| ---------------------------- | ---------------------------: |
+| [Day 6](../Day6/Day6.livemd) | [Day 8](../Day8/Day8.livemd) |
 
 [Return to puzzles index](../../AdventOfCode.livemd)
